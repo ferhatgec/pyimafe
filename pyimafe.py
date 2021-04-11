@@ -29,13 +29,13 @@ class Imafe:
 
     image_label = Gtk.Label()
 
-    filename = Gtk.Label()
-    resolution = Gtk.Label()
+    filename = Gtk.Entry()
+    resolution = Gtk.Entry()
 
     switcher = Gtk.StackSwitcher()
     image_stack = Gtk.Stack()
 
-    info_box = Gtk.Box()
+    info_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
     width = ''
     height = ''
@@ -50,6 +50,8 @@ class Imafe:
         window.set_size_request(700, 400)
         window.connect_after('destroy', self.destroy)
 
+        self.initialize()
+
         self.image_stack.set_vexpand(True)
         self.image_stack.set_hexpand(True)
 
@@ -57,6 +59,7 @@ class Imafe:
         self.switcher.set_stack(self.image_stack)
 
         box.set_spacing(5)
+        self.info_box.set_spacing(5)
 
         box.set_orientation(Gtk.Orientation.VERTICAL)
 
@@ -66,12 +69,14 @@ class Imafe:
         self.grid.attach(self.image_stack, 0, 1, 1, 1)
 
         self.image_stack.add_titled(box, 'Image', 'Image')
-        self.image_stack.add_titled(self.info_box, 'Image', 'Info')
+        self.image_stack.add_titled(self.info_box, 'Info', 'Info')
 
         window.set_titlebar(self.header_bar)
 
-        self.info_box.pack_start(self.filename, True, True, 0)
-        self.info_box.pack_start(self.resolution, True, True, 1)
+
+
+        self.info_box.pack_start(self.filename, False, True, 0)
+        self.info_box.pack_start(self.resolution, False, True, 1)
 
         window.add(box)
 
@@ -89,6 +94,21 @@ class Imafe:
 
     def destroy(window, self):
         Gtk.main_quit()
+
+    def initialize(self):
+        self.filename = self.set_info(self.filename)
+        self.resolution = self.set_info(self.resolution)
+
+    def set_info(self, entry: Gtk.Entry) -> Gtk.Entry:
+        entry.set_can_focus(False)
+        entry.set_editable(False)
+
+        entry.set_halign(Gtk.Align.FILL)
+        entry.set_valign(Gtk.Align.CENTER)
+
+        entry.margin = 20
+
+        return entry
 
     def on_open_clicked(self, button):
         dialog = Gtk.FileChooserDialog(title='Open Image',
@@ -113,8 +133,8 @@ class Imafe:
             self.height = str(self.image.get_allocation().height)
 
             self.header_bar.set_title(dialog_filename)
-            self.filename.set_label(dialog_filename)
-            self.resolution.set_label(self.width + 'x' + self.height)
+            self.filename.set_text(dialog_filename)
+            self.resolution.set_text(self.width + 'x' + self.height)
 
             dialog.destroy()
 
