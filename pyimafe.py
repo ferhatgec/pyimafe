@@ -24,13 +24,14 @@ class Imafe:
     image = 0
     title = 'PyImafe'
 
+    header_bar = Gtk.HeaderBar()
+
     def __init__(self):
         window = Gtk.Window()
-        header_bar = Gtk.HeaderBar()
         box = Gtk.Box()
 
-        header_bar.set_title(self.title)
-        header_bar.set_show_close_button(True)
+        self.header_bar.set_title(self.title)
+        self.header_bar.set_show_close_button(True)
 
         window.set_size_request(600, 400)
         window.connect_after('destroy', self.destroy)
@@ -39,7 +40,7 @@ class Imafe:
 
         box.set_orientation(Gtk.Orientation.VERTICAL)
 
-        window.set_titlebar(header_bar)
+        window.set_titlebar(self.header_bar)
 
         window.add(box)
 
@@ -49,7 +50,7 @@ class Imafe:
 
         button = Gtk.Button(label='Open')
 
-        header_bar.pack_start(button)
+        self.header_bar.pack_start(button)
 
         button.connect_after('clicked', self.on_open_clicked)
 
@@ -74,6 +75,9 @@ class Imafe:
 
         if dialog.run() == 1:
             self.image.set_from_file(dialog.get_filename())
+
+            self.header_bar.set_title(dialog.get_filename())
+
             dialog.destroy()
 
 
