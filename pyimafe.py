@@ -22,9 +22,10 @@ from os import path
 import sys
 
 center: float = 0.5
+resources_path = '/usr/share/pixmaps/imafe/{file}.png'
 
 class Imafe:
-    image = 0
+    image = Gtk.Image()
     title = 'PyImafe'
 
     header_bar = Gtk.HeaderBar()
@@ -86,8 +87,6 @@ class Imafe:
 
         window.add(box)
 
-        self.image = Gtk.Image()
-
         box.pack_start(self.image, True, True, 0)
 
         button = Gtk.Button(label='Open')
@@ -109,6 +108,11 @@ class Imafe:
         self.filename.set_text('...')
         self.resolution.set_text('...')
         self.type.set_text('...')
+
+        if path.exists(resources_path.format(file='imafe_main')):
+            __path = resources_path.format(file='imafe_main')
+
+            self.image.set_from_file(__path)
 
     def set_info(self, entry: Gtk.Entry) -> Gtk.Entry:
         entry.set_can_focus(False)
