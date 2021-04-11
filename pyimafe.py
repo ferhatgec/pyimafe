@@ -17,7 +17,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 
 from gi.repository import Gtk, Gdk, GdkPixbuf
-from os import path
+from os import path, getcwd
 
 import sys
 
@@ -27,6 +27,7 @@ resources_path = '/usr/share/pixmaps/imafe/{file}.png'
 class Imafe:
     image = Gtk.Image()
     title = 'PyImafe'
+    argument = ''
 
     header_bar = Gtk.HeaderBar()
     grid = Gtk.Grid()
@@ -85,6 +86,11 @@ class Imafe:
         self.info_box.pack_start(self.resolution, False, True, 1)
         self.info_box.pack_start(self.type, False, True, 2)
 
+        if len(sys.argv) > 1:
+            self.argument = (getcwd() + '/' + sys.argv[1])
+
+            self.open_image()
+
         window.add(box)
 
         box.pack_start(self.image, True, True, 0)
@@ -114,6 +120,11 @@ class Imafe:
 
             self.image.set_from_file(__path)
 
+    def open_image(self):
+        self.image.set_from_file(self.argument)
+
+        self.set(self.argument)
+
     def set_info(self, entry: Gtk.Entry) -> Gtk.Entry:
         entry.set_can_focus(False)
         entry.set_editable(False)
@@ -142,6 +153,25 @@ class Imafe:
 
         return self.match(file)
 
+    def set(self, file: str):
+        self.image.set_from_file(file)
+
+        self.width = str(self.image.get_allocation().width)
+        self.height = str(self.image.get_allocation().height)
+
+        self.header_bar.set_title(file)
+
+        self.filename.set_text('Path: '
+                               + file)
+
+        self.resolution.set_text('Resolution w x h: '
+                                 + self.width
+                                 + ' x '
+                                 + self.height)
+
+        self.type.set_text('Type: '
+                           + self.get_type_of_file(file))
+
     def on_open_clicked(self, button):
         dialog = Gtk.FileChooserDialog(title='Open Image',
                                        parent=button.get_toplevel(),
@@ -159,29 +189,14 @@ class Imafe:
         if dialog.run() == 1:
             dialog_filename = dialog.get_filename()
 
-            self.image.set_from_file(dialog_filename)
-
-            self.width = str(self.image.get_allocation().width)
-            self.height = str(self.image.get_allocation().height)
-
-            self.header_bar.set_title(dialog_filename)
-
-            self.filename.set_text('Path: '
-                                   + dialog_filename)
-
-            self.resolution.set_text('Resolution w x h: '
-                                     + self.width
-                                     + ' x '
-                                     + self.height)
-
-            self.type.set_text('Type: '
-                               + self.get_type_of_file(dialog_filename))
+            self.set(dialog_filename)
 
             dialog.destroy()
 
 
 def main():
     app = Imafe()
+
     Gtk.main()
 
 
