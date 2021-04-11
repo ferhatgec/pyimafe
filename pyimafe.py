@@ -87,13 +87,13 @@ class Imafe:
 
         window.set_titlebar(self.header_bar)
 
-        self.info_box.pack_start(self.filename, False, True, 0)
-        self.info_box.pack_start(self.resolution, False, True, 1)
+        self.info_box.pack_start(self.filename, False, True, 15)
+        self.info_box.pack_start(self.resolution, False, True, 15)
 
-        self.info_box.pack_start(self.type, False, True, 2)
+        self.info_box.pack_start(self.type, False, True, 15)
 
-        self.info_box.pack_start(self.created, False, True, 3)
-        self.info_box.pack_start(self.modification, False, True, 4)
+        self.info_box.pack_start(self.created, False, True, 15)
+        self.info_box.pack_start(self.modification, False, True, 15)
 
         if len(sys.argv) > 1:
             self.argument = (getcwd() + '/' + sys.argv[1])
@@ -106,8 +106,8 @@ class Imafe:
 
         button = Gtk.Button(label='Open')
 
-        self.header_bar.pack_start(button)
         self.header_bar.pack_start(self.switcher)
+        self.header_bar.pack_start(button)
 
         button.connect_after('clicked', self.on_open_clicked)
 
