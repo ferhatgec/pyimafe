@@ -8,4 +8,4 @@ sudo mkdir /usr/share/pixmaps/imafe/
 
 sudo cp resources/*.png /usr/share/pixmaps/imafe/
 
-#sudo cp pyimafe.desktop /usr/share/applications/
+sudo cp pyimafe.desktop /usr/share/applications/
