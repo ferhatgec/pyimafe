@@ -43,19 +43,17 @@ class Imafe:
     def __init__(self):
         window = Gtk.Window()
         box = Gtk.Box()
-        width = ''
-        height = ''
-
 
         self.header_bar.set_title(self.title)
         self.header_bar.set_show_close_button(True)
 
-        window.set_size_request(600, 400)
+        window.set_size_request(700, 400)
         window.connect_after('destroy', self.destroy)
 
         self.image_stack.set_vexpand(True)
         self.image_stack.set_hexpand(True)
 
+        self.switcher.halign = Gtk.Align.CENTER;
         self.switcher.set_stack(self.image_stack)
 
         box.set_spacing(5)
