@@ -19,7 +19,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, GdkPixbuf
 from os import path, getcwd
 
-import sys
+import sys, time
 
 center: float = 0.5
 resources_path = '/usr/share/pixmaps/imafe/{file}.png'
@@ -28,6 +28,9 @@ class Imafe:
     image = Gtk.Image()
     title = 'PyImafe'
     argument = ''
+
+    modification_date = ''
+    created_date = ''
 
     header_bar = Gtk.HeaderBar()
     grid = Gtk.Grid()
@@ -40,6 +43,9 @@ class Imafe:
     # TODO: Implement Tyfe library in Python (github.com/ferhatgec/tyfe)
     # for file-type information.
     type = Gtk.Entry()
+
+    modification = Gtk.Entry()
+    created = Gtk.Entry()
 
     switcher = Gtk.StackSwitcher()
     image_stack = Gtk.Stack()
@@ -83,7 +89,11 @@ class Imafe:
 
         self.info_box.pack_start(self.filename, False, True, 0)
         self.info_box.pack_start(self.resolution, False, True, 1)
+
         self.info_box.pack_start(self.type, False, True, 2)
+
+        self.info_box.pack_start(self.created, False, True, 3)
+        self.info_box.pack_start(self.modification, False, True, 4)
 
         if len(sys.argv) > 1:
             self.argument = (getcwd() + '/' + sys.argv[1])
@@ -106,14 +116,26 @@ class Imafe:
     def destroy(window, self):
         Gtk.main_quit()
 
+    def initialize_date(self, file: str):
+        self.created_date = time.ctime(path.getctime(file))
+        self.modification_date = time.ctime(path.getmtime(file))
+
+        self.created.set_text(self.created_date)
+        self.modification.set_text(self.modification_date)
+
     def initialize(self):
         self.filename = self.set_info(self.filename)
         self.resolution = self.set_info(self.resolution)
         self.type = self.set_info(self.type)
 
+        self.created = self.set_info(self.created)
+        self.modification = self.set_info(self.modification)
+
         self.filename.set_text('...')
         self.resolution.set_text('...')
         self.type.set_text('...')
+        self.created.set_text('...')
+        self.modification.set_text('...')
 
         if path.exists(resources_path.format(file='imafe_main')):
             __path = resources_path.format(file='imafe_main')
@@ -171,6 +193,9 @@ class Imafe:
 
         self.type.set_text('Type: '
                            + self.get_type_of_file(file))
+
+        self.initialize_date(file)
+
 
     def on_open_clicked(self, button):
         dialog = Gtk.FileChooserDialog(title='Open Image',
