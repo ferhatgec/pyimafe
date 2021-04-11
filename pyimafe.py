@@ -56,7 +56,7 @@ class Imafe:
         self.header_bar.set_title(self.title)
         self.header_bar.set_show_close_button(True)
 
-        window.set_size_request(700, 400)
+        window.set_size_request(700, 600)
         window.connect_after('destroy', self.destroy)
 
         self.initialize()
@@ -74,7 +74,6 @@ class Imafe:
 
         window.add(self.grid)
 
-        self.grid.attach(self.switcher, 0, 0, 1, 1)
         self.grid.attach(self.image_stack, 0, 1, 1, 1)
 
         self.image_stack.add_titled(box, 'Image', 'Image')
@@ -98,6 +97,7 @@ class Imafe:
         button = Gtk.Button(label='Open')
 
         self.header_bar.pack_start(button)
+        self.header_bar.pack_start(self.switcher)
 
         button.connect_after('clicked', self.on_open_clicked)
 
