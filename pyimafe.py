@@ -137,8 +137,14 @@ class Imafe:
             self.height = str(self.image.get_allocation().height)
 
             self.header_bar.set_title(dialog_filename)
-            self.filename.set_text(dialog_filename)
-            self.resolution.set_text(self.width + 'x' + self.height)
+
+            self.filename.set_text('Path: '
+                                   + dialog_filename)
+
+            self.resolution.set_text('Resolution w x h: '
+                                     + self.width
+                                     + ' x '
+                                     + self.height)
 
             dialog.destroy()
 
