@@ -19,6 +19,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, GdkPixbuf
 import sys
 
+center: float = 0.5
 
 class Imafe:
     image = 0
@@ -73,8 +74,6 @@ class Imafe:
 
         window.set_titlebar(self.header_bar)
 
-
-
         self.info_box.pack_start(self.filename, False, True, 0)
         self.info_box.pack_start(self.resolution, False, True, 1)
 
@@ -99,12 +98,17 @@ class Imafe:
         self.filename = self.set_info(self.filename)
         self.resolution = self.set_info(self.resolution)
 
+        self.filename.set_text('Idk')
+        self.resolution.set_text('???')
+
     def set_info(self, entry: Gtk.Entry) -> Gtk.Entry:
         entry.set_can_focus(False)
         entry.set_editable(False)
 
         entry.set_halign(Gtk.Align.FILL)
         entry.set_valign(Gtk.Align.CENTER)
+
+        entry.set_alignment(xalign=center)
 
         entry.margin = 20
 
