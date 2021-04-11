@@ -17,6 +17,8 @@ import gi
 gi.require_version('Gtk', '3.0')
 
 from gi.repository import Gtk, Gdk, GdkPixbuf
+from os import path
+
 import sys
 
 center: float = 0.5
@@ -32,6 +34,10 @@ class Imafe:
 
     filename = Gtk.Entry()
     resolution = Gtk.Entry()
+
+    # TODO: Implement Tyfe library in Python (github.com/ferhatgec/tyfe)
+    # for file-type information.
+    type = Gtk.Entry()
 
     switcher = Gtk.StackSwitcher()
     image_stack = Gtk.Stack()
@@ -76,6 +82,7 @@ class Imafe:
 
         self.info_box.pack_start(self.filename, False, True, 0)
         self.info_box.pack_start(self.resolution, False, True, 1)
+        self.info_box.pack_start(self.type, False, True, 2)
 
         window.add(box)
 
@@ -97,9 +104,11 @@ class Imafe:
     def initialize(self):
         self.filename = self.set_info(self.filename)
         self.resolution = self.set_info(self.resolution)
+        self.type = self.set_info(self.type)
 
-        self.filename.set_text('Idk')
-        self.resolution.set_text('???')
+        self.filename.set_text('...')
+        self.resolution.set_text('...')
+        self.type.set_text('...')
 
     def set_info(self, entry: Gtk.Entry) -> Gtk.Entry:
         entry.set_can_focus(False)
@@ -113,6 +122,21 @@ class Imafe:
         entry.margin = 20
 
         return entry
+
+    def match(self, file: str) -> str:
+        return {
+            '.png': 'PNG-Image',
+
+            '.jpeg': 'JPEG-Image',
+            '.jpg': 'JPEG-Image',
+
+            '.gif': 'GIF-Image'
+        }.get(file, 'Regular (?)')
+
+    def get_type_of_file(self, file: str) -> str:
+        file = path.splitext(file)[1]
+
+        return self.match(file)
 
     def on_open_clicked(self, button):
         dialog = Gtk.FileChooserDialog(title='Open Image',
@@ -145,6 +169,9 @@ class Imafe:
                                      + self.width
                                      + ' x '
                                      + self.height)
+
+            self.type.set_text('Type: '
+                               + self.get_type_of_file(dialog_filename))
 
             dialog.destroy()
 
